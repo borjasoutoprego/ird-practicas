@@ -34,7 +34,7 @@ def main():
                 threading.Thread(target=reply_client, args=[socket_cliente, address_info]).start()
             except socket.timeout:
                 # Captura excepcion si el tiempo de espera se agota
-                print(f'Timeout exception, {timeout} went by without receiving connections.')
+                print(f'{timeout} segundos sin recibir nada')
                 break
     except Exception as e:
         print(f'Error: {e}')
@@ -47,7 +47,7 @@ def reply_client(client, address_info):
     print(f'Conexión establecida con {address_info[0]}:{address_info[1]}')
     # Recibimos el mensaje
     msg = client.recv(4096)
-    print(f'Mensaje recibido: {msg}')
+    print('Mensaje recibido: {}'.format(msg.decode('UTF-8')))
     # Devuelve el mensaje al socket
     client.send(msg)
     # Cierra la conexion con el cliente y vuelve, para esperar por otra
