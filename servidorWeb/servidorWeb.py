@@ -9,6 +9,7 @@ import sys
 import socket
 import threading
 import datetime
+import os
 
 def main():
     # Comprobación argumentos
@@ -75,15 +76,31 @@ def reply_client(client, address_info):
     try:
         if url == '/':
             url = '/index.html'
-        f = open('data' + url, "r")
+        f = open('data' + url, "r", encoding = 'utf-8')
         content = f.read()
         f.close()
-        client.send(b'HTTP/1.0 200 OK\r\n' + default_headers() + b'Content-Type: text/html\r\nContent-Length: ' + str(len(content)).encode() + b'\r\n\r\n' + content.encode())
+        answer = (b'HTTP/1.0 200 OK\r\n' + default_headers() + b'Content-Type: ' + content_type(url) + b'\r\nLast-Modified: ' + last_modified(url)
+                  + b'\r\nContent-Length: ' + str(os.path.getsize('data' + url)).encode() + b'\r\n\r\n')
+        if metodo == 'GET':
+            answer += content.encode('UTF-8')
+        client.send(answer)
     except IOError:
         send_error(client, 404)
         return
         
     client.close()
+
+def content_type(url):
+    if url.endswith('txt'):
+        return b'text/plain'
+    elif url.endswith('html'):
+        return b'text/html'
+    elif url.endswith('gif'):
+        return b'image/gif'
+    elif url.endswith('jpeg'):
+        return b'image/jpeg'
+    else: 
+        return b'application/octet-stream'
      
 def default_headers():
     server = b'MyServer/1.0'
@@ -100,6 +117,10 @@ def send_error(client, error):
         
     client.close()
     
+def last_modified(url):
+    last_modified = datetime.datetime.fromtimestamp(os.path.getmtime('data' + url)).strftime('%a, %d %b %Y %H:%M:%S %Z') # fecha de ultima modificacion de url
+    return last_modified.encode()
+
 def recvall(sock):
     BUFF_SIZE = 4096 
     data = b''
