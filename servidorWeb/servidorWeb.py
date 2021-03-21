@@ -72,22 +72,29 @@ def reply_client(client, address_info):
     
     url = request_line[1]
     protocolo = request_line[2]
-    #client.send(b'HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nContent-Length: 5\r\n\r\nHello') 
-    try:
-        if url == '/':
-            url = '/index.html'
-        f = open('data' + url, "r", encoding = 'utf-8')
-        content = f.read()
-        f.close()
+    if url.endswith('jpg') or url.endswith('gif'):
+        image = open('data' + url, 'rb') 
+        image_read = image.read()
         answer = (b'HTTP/1.0 200 OK\r\n' + default_headers() + b'Content-Type: ' + content_type(url) + b'\r\nLast-Modified: ' + last_modified(url)
-                  + b'\r\nContent-Length: ' + str(os.path.getsize('data' + url)).encode() + b'\r\n\r\n')
-        if metodo == 'GET':
-            answer += content.encode('UTF-8')
+                  + b'\r\nContent-Length: ' + str(os.path.getsize('data' + url)).encode() + b'\r\n\r\n' + image_read)
         client.send(answer)
-    except IOError:
-        send_error(client, 404)
-        return
-        
+    
+    else:     
+        try:
+            if url == '/':
+                url = '/index.html'
+            f = open('data' + url, "r", encoding = 'utf-8')
+            content = f.read()
+            f.close()
+            answer = (b'HTTP/1.0 200 OK\r\n' + default_headers() + b'Content-Type: ' + content_type(url) + b'\r\nLast-Modified: ' + last_modified(url)
+                      + b'\r\nContent-Length: ' + str(os.path.getsize('data' + url)).encode() + b'\r\n\r\n')
+            if metodo == 'GET':
+                answer += content.encode('UTF-8')
+            client.send(answer)
+        except IOError:
+            send_error(client, 404)
+            return
+            
     client.close()
 
 def content_type(url):
