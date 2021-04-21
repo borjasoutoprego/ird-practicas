@@ -51,12 +51,22 @@ for townhall in townhall_list:
     coords_soup = BeautifulSoup(coords_resp.content.decode(), 'lxml')
     
     list_place = []
+    
     for element3 in coords_soup.find_all('place'):
         list_place.append(element3)
-    importance = list_place[0]['importance']
-    lat = list_place[0]['lat']
-    lon = list_place[0]['lon']
+
+    list_importance = []
     
+    for i in range(len(list_place)):
+        imp = float(list_place[i]['importance'])
+        list_importance.append(imp)
+    importance = max(list_importance)
+    
+    for e in range(len(list_place)):
+        if float(list_place[e]['importance']) == importance:
+            lat = list_place[e]['lat']
+            lon = list_place[e]['lon']
+            
     print('Latitud:', lat)
     print('Longitud:', lon)
     print('\n')
