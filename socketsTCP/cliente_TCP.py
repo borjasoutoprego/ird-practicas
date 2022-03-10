@@ -5,7 +5,7 @@ def main():
     if len(sys.argv) != 4:
         print("Formato ClienteUDP <maquina> <puerto> <mensaje>")
         sys.exit()
-        
+
     try:
         # Instrucciones sockets
         maquina = sys.argv[1]
@@ -45,3 +45,5 @@ def main():
         
 if __name__ == "__main__":
     main()
+    
+    
