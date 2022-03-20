@@ -1,2 +1,2 @@
 # IRD-PRÁCTICAS
-Prácticas de `Internet Redes y Datos`
+Prácticas realizadas en la asignatura `Internet Redes y Datos`
