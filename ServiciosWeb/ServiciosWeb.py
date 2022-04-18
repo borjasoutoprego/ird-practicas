@@ -2,7 +2,7 @@
 """
 Created on Fri Apr  9 09:20:01 2021
 
-@author: Administrador
+@author: Borja Souto Prego
 """
 
 import requests
