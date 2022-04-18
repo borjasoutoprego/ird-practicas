@@ -1,3 +1,7 @@
+"""
+
+@author: Borja Souto Prego
+"""
 import sys
 import socket
 import threading
